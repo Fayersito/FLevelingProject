@@ -38,7 +38,6 @@
             font-size: 8px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            /* Evita que se seleccione texto al tocar botones en el móvil */
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
@@ -102,7 +101,7 @@
             background: rgba(15, 23, 42, 0.8);
             color: #94a3b8;
             border: 1px solid #1e293b;
-            padding: 14px; /* Un poco más grande para dedos */
+            padding: 14px;
             font-family: var(--font-game);
             font-size: 7px;
             cursor: pointer;
@@ -112,6 +111,8 @@
         button:active { background: rgba(56, 189, 248, 0.2); color: var(--text-accent); }
 
         .btn-finish { background: rgba(56, 189, 248, 0.1); color: var(--success); border-color: var(--success); margin-top: 15px; text-align: center; width: 100%; padding: 16px; }
+        .btn-finish:hover { background: var(--success); color: black; }
+
         .btn-fail { background: rgba(244, 63, 94, 0.05); color: var(--danger); border-color: var(--danger); margin-top: 8px; text-align: center; width: 100%; opacity: 0.6; padding: 12px; }
 
         .notification {
@@ -128,20 +129,20 @@
 </head>
 <body>
 
-<div id="notif" class="notification">[SYSTEM NOTIFICATION]</div>
+<div id="notif" class="notification">[NOTIFICACIÓN DEL SISTEMA]</div>
 
-<div class="system-status">[ SYSTEM INITIALIZED: STATUS ACTIVE ]</div>
+<div class="system-status">[ SISTEMA INICIALIZADO: ESTADO ACTIVO ]</div>
 
 <div class="app-wrapper">
     <div class="panel panel-top">
         <div style="font-size: 11px; margin-bottom: 15px; color: var(--text-accent);">FLEVELING: MONARCH</div>
-        <div class="streak-counter">STREAK: <span id="streak-val">0</span> DAYS | x<span id="bonus-val">1.0</span></div>
-        <div style="font-size:6px; margin-bottom:4px; color: var(--text-accent);">HP [MIND STABILITY]</div>
+        <div class="streak-counter">RACHA: <span id="streak-val">0</span> DÍAS | x<span id="bonus-val">1.0</span></div>
+        <div style="font-size:6px; margin-bottom:4px; color: var(--text-accent);">HP [ESTABILIDAD MENTAL]</div>
         <div class="bar-container"><div class="bar-fill" style="background: var(--bar-hp); width: 100%;"></div></div>
         <div class="divider"></div>
         <div id="stats-container"></div>
         <div class="divider"></div>
-        <div class="ch-lvl-counter">RANK: <span id="lvl-general">0</span></div>
+        <div class="ch-lvl-counter">RANGO: <span id="lvl-general">0</span></div>
     </div>
 
     <div class="panel panel-bottom">
@@ -155,27 +156,27 @@
 
 <div class="actions-section">
     <div class="actions-grid">
-        <button onclick="addXP({'STR': 15, 'END': 10})">[QUEST] GYM TRAINING (+STR/END)</button>
-        <button onclick="addXP({'INT': 20, 'FOC': 10})">[QUEST] COGNITIVE DEV (+INT/FOC)</button>
+        <button onclick="addXP({'STR': 15, 'END': 10})">[QUEST] EJERCICIO (+STR/END)</button>
+        <button onclick="addXP({'INT': 20, 'FOC': 10})">[QUEST] ESTUDIO (+INT/FOC)</button>
         <button onclick="addXP({'DEX': 15, 'WILL': 5})">[QUEST] MANIPULATION SKILL (+DEX/WILL)</button>
-        <button onclick="addXP({'FOC': 25})">[SKILL] DEEP CONCENTRATION (+FOC)</button>
-        <button onclick="addXP({'END': 15})">[DAILY] 10K STEPS (+END)</button>
-        <button onclick="addXP({'END': 10, 'WILL': 5})">[DAILY] CLEAN FASTING (+END)</button>
-        <button onclick="addXP({'WILL': 30})">[QUEST] TOTAL DISCIPLINE (+WILL)</button>
+        <button onclick="addXP({'FOC': 25})">[SKILL] MODO ENFOQUE (+FOC)</button>
+        <button onclick="addXP({'END': 15})">[DAILY] CAMINAR 10KM (+END)</button>
+        <button onclick="addXP({'END': 10, 'WILL': 5})">[DAILY] COMER BIEN (+END)</button>
+        <button onclick="addXP({'WILL': 30})">[QUEST] TODAS LAS TAREAS HECHAS (+WILL)</button>
     </div>
     
-    <button class="btn-finish" onclick="finishDay()">[!] COMPLETE DAILY QUESTS</button>
-    <button class="btn-fail" onclick="failDay()">[X] QUEST FAILED / RESET STREAK</button>
+    <button class="btn-finish" onclick="finishDay()">[!] FINALIZAR DÍA (RACHA +1)</button>
+    <button class="btn-fail" onclick="failDay()">[X] MISIÓN FALLIDA / RESET RACHA</button>
     
     <button onclick="resetProgress()" style="width:100%; border:none; background:none; color:#1e293b; margin-top:20px; font-size:5px;">TERMINATE SYSTEM (WIPE DATA)</button>
 </div>
 
 <div class="io-section">
     <div style="display:flex; gap:5px;">
-        <button onclick="exportData()" style="flex:1; text-align:center; font-size:6px;">SAVE CODE</button>
-        <button onclick="importData()" style="flex:1; text-align:center; font-size:6px;">LOAD CODE</button>
+        <button onclick="exportData()" style="flex:1; text-align:center; font-size:6px;">GUARDAR CÓDIGO</button>
+        <button onclick="importData()" style="flex:1; text-align:center; font-size:6px;">CARGAR CÓDIGO</button>
     </div>
-    <textarea id="io-box" rows="1" placeholder="SYSTEM CODE"></textarea>
+    <textarea id="io-box" rows="1" placeholder="CÓDIGO DE SISTEMA"></textarea>
 </div>
 
 <script>
@@ -222,20 +223,20 @@
             totalGained += amount;
             let s = userData.stats[statKey];
             s.xp += amount;
-            while (s.xp >= getStatMaxXP(s.lvl)) { s.xp -= getStatMaxXP(s.lvl); s.lvl++; showNotify(`[SYSTEM] ${statKey} INCREASED`); }
+            while (s.xp >= getStatMaxXP(s.lvl)) { s.xp -= getStatMaxXP(s.lvl); s.lvl++; showNotify(`[SISTEMA] ${statKey} AUMENTADO`); }
         }
         userData.general.xp += totalGained;
-        while (userData.general.xp >= getGenMaxXP(userData.general.lvl)) { userData.general.xp -= getGenMaxXP(userData.general.lvl); userData.general.lvl++; showNotify(`[SYSTEM] RANK UP`); }
+        while (userData.general.xp >= getGenMaxXP(userData.general.lvl)) { userData.general.xp -= getGenMaxXP(userData.general.lvl); userData.general.lvl++; showNotify(`[SISTEMA] SUBIDA DE RANGO`); }
         saveGame(); updateUI();
     }
 
-    function finishDay() { userData.streak++; showNotify(`[SYSTEM] DAILY COMPLETE / STREAK: ${userData.streak}`); saveGame(); updateUI(); }
-    function failDay() { if (confirm("PENALTY ALERT: RESET STREAK?")) { userData.streak = 0; userData.general.xp = Math.max(0, userData.general.xp - 50); saveGame(); updateUI(); showNotify("[SYSTEM] STREAK RESET"); } }
-    function resetProgress() { if (confirm("TERMINATE ALL DATA?")) { localStorage.removeItem('fleveling_save'); location.reload(); } }
+    function finishDay() { userData.streak++; showNotify(`[SISTEMA] MISIÓN DIARIA COMPLETADA / RACHA: ${userData.streak}`); saveGame(); updateUI(); }
+    function failDay() { if (confirm("ALERTA DE PENALIZACIÓN: ¿RESETEAR RACHA?")) { userData.streak = 0; userData.general.xp = Math.max(0, userData.general.xp - 50); saveGame(); updateUI(); showNotify("[SISTEMA] RACHA REINICIADA"); } }
+    function resetProgress() { if (confirm("¿TERMINAR TODOS LOS DATOS?")) { localStorage.removeItem('fleveling_save'); location.reload(); } }
     function showNotify(msg) { const n = document.getElementById('notif'); n.innerText = msg; n.style.display = 'block'; setTimeout(() => n.style.display = 'none', 3000); }
     function saveGame() { localStorage.setItem('fleveling_save', btoa(JSON.stringify(userData))); }
     function exportData() { document.getElementById('io-box').value = btoa(JSON.stringify(userData)); }
-    function importData() { try { userData = JSON.parse(atob(document.getElementById('io-box').value)); saveGame(); updateUI(); showNotify("[SYSTEM] RESTORED"); } catch(e) { showNotify("[SYSTEM] CORRUPTED"); } }
+    function importData() { try { userData = JSON.parse(atob(document.getElementById('io-box').value)); saveGame(); updateUI(); showNotify("[SISTEMA] RESTAURADO"); } catch(e) { showNotify("[SISTEMA] CORRUPTO"); } }
 
     window.onload = () => {
         const save = localStorage.getItem('fleveling_save');
