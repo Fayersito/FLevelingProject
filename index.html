@@ -526,11 +526,13 @@ function getTodayKey() {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-function getWeekKey()   {
-    const d = new Date();
-    const jan1 = new Date(d.getFullYear(), 0, 1);
-    const week = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
-    return `${d.getFullYear()}-W${String(week).padStart(2,'0')}`;
+function getWeekKey() {
+    const d    = new Date();
+    const day  = d.getDay(); // 0=Dom, 1=Lun...6=Sáb
+    const diff = (day === 0) ? -6 : 1 - day; // retroceder hasta el lunes
+    const mon  = new Date(d);
+    mon.setDate(d.getDate() + diff);
+    return `week-${mon.getFullYear()}-${String(mon.getMonth()+1).padStart(2,'0')}-${String(mon.getDate()).padStart(2,'0')}`;
 }
 
 // ══════════════════════════════════════════════════════════════
